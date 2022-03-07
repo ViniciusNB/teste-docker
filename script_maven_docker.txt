@@ -1,0 +1,38 @@
+# fonte usada para pesquisa: https://www.youtube.com/watch?v=8eGOtu_SZKg
+
+# criar arquivo com nome Dockerfile na pasta do projeto, e inserir os seguintes dados
+FROM openjdk:16-jdk-slim
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+RUN bash -c 'touch /app.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+
+# criando arquivo .jar
+# para criar o arquivo .jar do nosso projeto, digite em um terminal dentro da pasta do projeto o seguinte comando
+mvn clean package -DskipTests
+
+# se tudo der certo, um arquivo .jar vai ser criado dentro da pasta target/ do nosso projeto
+# copie o nome do arquivo .jar pois usaremos no futuro
+
+# buildando o projeto
+# para buildar o projeto, digite o seguinte comando, usando o nome do arquivo .jar que copiamos no passo anterior
+
+docker build -t nome_do_arquivo_jar:0.0.1-SNAPSHOT .
+
+# para ver se deu certo a criação da imagem, digite o seguinte comando
+docker images
+
+# criando container e rodando
+# para criar um container com a nossa imagem criada no passo anterior, digite o seguinte comando
+docker run --name nome_container -p 8080:8080 nome_do_arquivo_jar:0.0.1-SNAPSHOT
+
+# as primeiras linhas que irão aparecer no terminal devem ser essas
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.6.4)
+
+2022-03-07 19:20:48.071  INFO 1 --- [           main] c.e.d.DockerexampleApplication           : Starting DockerexampleApplication v0.0.1-SNAPSHOT using Java 16.0.2 on cc2436ba8fbb with PID 1 (/app.jar started by root in /)
